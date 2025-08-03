@@ -542,30 +542,38 @@ parameter HPMCNT31 = 12'hC1F;
 
 //==========================================================
 //                Event Signals Rename
+//            (all the hpcp event signals)
 //==========================================================
-//SPLIT INST???
-assign hpcp_retire_inst_vld           = rtu_hpcp_retire_inst_vld;
-assign hpcp_retire_pc[39:0]           = rtu_hpcp_retire_pc[39:0];
-assign hpcp_retire_inst_condbr        = iu_hpcp_inst_condbr;
-assign hpcp_retire_bht_mispred        = iu_hpcp_inst_bht_mispred;
-assign hpcp_retire_inst_store         = lsu_hpcp_inst_store;
-assign hpcp_ifu_icache_access         = ifu_hpcp_icache_access;
-assign hpcp_ifu_icache_miss           = ifu_hpcp_icache_miss;
-assign hpcp_lsu_dcache_read_access    = lsu_hpcp_cache_read_access;
-assign hpcp_lsu_dcache_read_miss      = lsu_hpcp_cache_read_miss;
-assign hpcp_lsu_dcache_write_access   = lsu_hpcp_cache_write_access;
-assign hpcp_lsu_dcache_write_miss     = lsu_hpcp_cache_write_miss;
-assign hpcp_tlb_iutlb_miss            = mmu_hpcp_iutlb_miss;
-assign hpcp_tlb_dutlb_miss            = mmu_hpcp_dutlb_miss;
-assign hpcp_tlb_jtlb_miss             = mmu_hpcp_jtlb_miss;
-assign hpcp_idu_inst_type[6:0]        = idu_hpcp_inst_type[6:0];
-assign hpcp_unalign_inst              = lsu_hpcp_unalign_inst;
-assign hpcp_int_disable               = cp0_hpcp_int_off_vld;
-assign hpcp_int_ack                   = rtu_hpcp_int_vld;
-assign hpcp_inst_jmp_over_8m          = iu_hpcp_jump_8m;
-assign hpcp_backend_stall             = idu_hpcp_backend_stall;
-assign hpcp_frontend_stall            = idu_hpcp_frontend_stall;
-assign hpcp_sync_stall                = cp0_hpcp_sync_stall_vld;
+// RTU (Retire Unit) Performance Signals
+assign hpcp_retire_inst_vld           = rtu_hpcp_retire_inst_vld;    // Instruction retirement valid - indicates when an instruction successfully completes execution
+assign hpcp_retire_pc[39:0]           = rtu_hpcp_retire_pc[39:0];    // Retired instruction PC - program counter of the instruction that just retired
+// IU (Integer Unit) Performance Signals
+assign hpcp_retire_inst_condbr        = iu_hpcp_inst_condbr;         // Conditional branch instruction - counts conditional branch instructions executed
+assign hpcp_retire_bht_mispred        = iu_hpcp_inst_bht_mispred;    // Branch prediction miss - counts when branch predictor incorrectly predicts branch direction
+assign hpcp_inst_jmp_over_8m          = iu_hpcp_jump_8m;             // Jump over 8MB - counts jumps that cross 8MB address boundaries (large jumps)
+// LSU (Load/Store Unit) Performance Signals
+assign hpcp_retire_inst_store         = lsu_hpcp_inst_store;         // Store instruction - counts all store operations to memory
+assign hpcp_lsu_dcache_read_access    = lsu_hpcp_cache_read_access;  // Data cache read access - counts all read accesses to data cache
+assign hpcp_lsu_dcache_read_miss      = lsu_hpcp_cache_read_miss;    // Data cache read miss - counts read misses in data cache (cache miss penalty)
+assign hpcp_lsu_dcache_write_access   = lsu_hpcp_cache_write_access; // Data cache write access - counts all write accesses to data cache
+assign hpcp_lsu_dcache_write_miss     = lsu_hpcp_cache_write_miss;   // Data cache write miss - counts write misses in data cache
+assign hpcp_unalign_inst              = lsu_hpcp_unalign_inst;       // Unaligned memory access - counts memory accesses that cross cache line or word boundaries
+// IFU (Instruction Fetch Unit) Performance Signals
+assign hpcp_ifu_icache_access         = ifu_hpcp_icache_access;      // Instruction cache access - counts all accesses to instruction cache
+assign hpcp_ifu_icache_miss           = ifu_hpcp_icache_miss;        // Instruction cache miss - counts instruction cache misses (fetch stall source)
+// MMU (Memory Management Unit) Performance Signals
+assign hpcp_tlb_iutlb_miss            = mmu_hpcp_iutlb_miss;         // Instruction μTLB miss - counts misses in instruction micro-TLB
+assign hpcp_tlb_dutlb_miss            = mmu_hpcp_dutlb_miss;         // Data μTLB miss - counts misses in data micro-TLB
+assign hpcp_tlb_jtlb_miss             = mmu_hpcp_jtlb_miss;          // Joint TLB miss - counts misses in main joint TLB (expensive page table walks)
+// IDU (Instruction Decode Unit) Performance Signals
+assign hpcp_idu_inst_type[6:0]        = idu_hpcp_inst_type[6:0];    // Instruction type classification - 7-bit vector categorizing instruction types
+assign hpcp_backend_stall             = idu_hpcp_backend_stall;     // Backend pipeline stall - indicates execution units are stalled
+assign hpcp_frontend_stall            = idu_hpcp_frontend_stall;    // Frontend pipeline stall - indicates instruction fetch/decode is stalled
+// CP0 (Control Processor) Performance Signals
+assign hpcp_int_disable               = cp0_hpcp_int_off_vld;       // Interrupt disable event - counts when interrupts are masked/disabled
+assign hpcp_sync_stall                = cp0_hpcp_sync_stall_vld;    // Synchronization stall - counts pipeline stalls due to synchronization instructions
+// RTU Interrupt Performance Signals
+assign hpcp_int_ack                   = rtu_hpcp_int_vld;           // Interrupt acknowledgment - counts when interrupts are acknowledged and handled
 
 //==============================================================================
 // Write signal 
@@ -1098,49 +1106,6 @@ aq_hpcp_adder_sel  x_aq_hpcp_adder_sel_10 (
   .mhpmevtx_value  (mhpmevt10_value)
 );
 
-// &ConnRule(s/x/11/); @455
-// &Instance("aq_hpcp_adder_sel", "x_aq_hpcp_adder_sel_11"); @456
-// &ConnRule(s/x/12/); @458
-// &Instance("aq_hpcp_adder_sel", "x_aq_hpcp_adder_sel_12"); @459
-// &ConnRule(s/x/13/); @461
-// &Instance("aq_hpcp_adder_sel", "x_aq_hpcp_adder_sel_13"); @462
-// &ConnRule(s/x/14/); @464
-// &Instance("aq_hpcp_adder_sel", "x_aq_hpcp_adder_sel_14"); @465
-// &ConnRule(s/x/15/); @467
-// &Instance("aq_hpcp_adder_sel", "x_aq_hpcp_adder_sel_15"); @468
-// &ConnRule(s/x/16/); @470
-// &Instance("aq_hpcp_adder_sel", "x_aq_hpcp_adder_sel_16"); @471
-// &ConnRule(s/x/17/); @473
-// &Instance("aq_hpcp_adder_sel", "x_aq_hpcp_adder_sel_17"); @474
-// &ConnRule(s/x/18/); @476
-// &Instance("aq_hpcp_adder_sel", "x_aq_hpcp_adder_sel_18"); @477
-// &ConnRule(s/x/19/); @480
-// &Instance("aq_hpcp_adder_sel", "x_aq_hpcp_adder_sel_19"); @481
-// &ConnRule(s/x/20/); @483
-// &Instance("aq_hpcp_adder_sel", "x_aq_hpcp_adder_sel_20"); @484
-// &ConnRule(s/x/21/); @486
-// &Instance("aq_hpcp_adder_sel", "x_aq_hpcp_adder_sel_21"); @487
-// &ConnRule(s/x/22/); @489
-// &Instance("aq_hpcp_adder_sel", "x_aq_hpcp_adder_sel_22"); @490
-// &ConnRule(s/x/23/); @492
-// &Instance("aq_hpcp_adder_sel", "x_aq_hpcp_adder_sel_23"); @493
-// &ConnRule(s/x/24/); @495
-// &Instance("aq_hpcp_adder_sel", "x_aq_hpcp_adder_sel_24"); @496
-// &ConnRule(s/x/25/); @498
-// &Instance("aq_hpcp_adder_sel", "x_aq_hpcp_adder_sel_25"); @499
-// &ConnRule(s/x/26/); @501
-// &Instance("aq_hpcp_adder_sel", "x_aq_hpcp_adder_sel_26"); @502
-// &ConnRule(s/x/27/); @504
-// &Instance("aq_hpcp_adder_sel", "x_aq_hpcp_adder_sel_27"); @505
-// &ConnRule(s/x/28/); @507
-// &Instance("aq_hpcp_adder_sel", "x_aq_hpcp_adder_sel_28"); @508
-// &ConnRule(s/x/29/); @510
-// &Instance("aq_hpcp_adder_sel", "x_aq_hpcp_adder_sel_29"); @511
-// &ConnRule(s/x/30/); @513
-// &Instance("aq_hpcp_adder_sel", "x_aq_hpcp_adder_sel_30"); @514
-// &ConnRule(s/x/31/); @516
-// &Instance("aq_hpcp_adder_sel", "x_aq_hpcp_adder_sel_31"); @517
-
 //==========================================================
 //                 Clk Enable of Gated Cell 
 //==========================================================
@@ -1192,12 +1157,6 @@ gated_clk_cell  x_hpcp_gated_clk (
   .pad_yy_icg_scan_en (pad_yy_icg_scan_en)
 );
 
-// &Connect(.clk_in      (forever_cpuclk), @619
-//          .external_en (1'b0), @620
-//          .global_en   (1'b1), @621
-//          .module_en   (cp0_hpcp_icg_en), @622
-//          .local_en    (hpcp_clk_en), @623
-//          .clk_out     (hpcp_clk)); @624
 assign hpcp_clk_en = mcntinhbt_clk_en 
                   || mcntinten_clk_en 
                   || mhpmcr_clk_en

@@ -14,248 +14,313 @@ limitations under the License.
 */
 
 module aq_core(
-  input   [2  :0]  biu_cp0_coreid,
-  input            biu_cp0_me_int,
-  input            biu_cp0_ms_int,
-  input            biu_cp0_mt_int,
-  input   [39 :0]  biu_cp0_rvba,
-  input            biu_cp0_se_int,
-  input            biu_cp0_ss_int,
-  input            biu_cp0_st_int,
-  input            biu_ifu_arready,
-  input   [127:0]  biu_ifu_rdata,
-  input            biu_ifu_rid,
-  input            biu_ifu_rlast,
-  input   [1  :0]  biu_ifu_rresp,
-  input            biu_ifu_rvalid,
-  input            biu_lsu_arready,
-  input            biu_lsu_no_op,
-  input   [127:0]  biu_lsu_rdata,
-  input   [3  :0]  biu_lsu_rid,
-  input            biu_lsu_rlast,
-  input   [1  :0]  biu_lsu_rresp,
-  input            biu_lsu_rvalid,
-  input            biu_lsu_stb_awready,
-  input            biu_lsu_stb_wready,
-  input            biu_lsu_vb_awready,
-  input            biu_lsu_vb_wready,
-  input            cpurst_b,
-  input            dtu_cp0_dcsr_mprven,
-  input   [1  :0]  dtu_cp0_dcsr_prv,
-  input   [63 :0]  dtu_cp0_rdata,
-  input            dtu_cp0_wake_up,
-  input   [31 :0]  dtu_ifu_debug_inst,
-  input            dtu_ifu_debug_inst_vld,
-  input   [21 :0]  dtu_ifu_halt_info0,
-  input   [21 :0]  dtu_ifu_halt_info1,
-  input            dtu_ifu_halt_info_vld,
-  input            dtu_ifu_halt_on_reset,
-  input            dtu_lsu_addr_trig_en,
-  input            dtu_lsu_data_trig_en,
-  input   [21 :0]  dtu_lsu_halt_info,
-  input            dtu_lsu_halt_info_vld,
-  input            dtu_rtu_async_halt_req,
-  input   [63 :0]  dtu_rtu_dpc,
-  input            dtu_rtu_ebreak_action,
-  input            dtu_rtu_int_mask,
-  input   [63 :0]  dtu_rtu_pending_tval,
-  input            dtu_rtu_resume_req,
-  input            dtu_rtu_step_en,
-  input            dtu_rtu_sync_flush,
-  input            dtu_rtu_sync_halt_req,
-  input            forever_cpuclk,
-  input   [63 :0]  hpcp_cp0_data,
-  input            hpcp_cp0_int_vld,
-  input            hpcp_cp0_sce,
-  input            hpcp_idu_cnt_en,
-  input            hpcp_ifu_cnt_en,
-  input            hpcp_iu_cnt_en,
-  input            hpcp_lsu_cnt_en,
-  input            hpcp_rtu_cnt_en,
-  input            mmu_cp0_cmplt,
-  input   [63 :0]  mmu_cp0_data,
-  input            mmu_cp0_tlb_inv_done,
-  input            mmu_ifu_access_fault,
-  input   [27 :0]  mmu_ifu_pa,
-  input            mmu_ifu_pa_vld,
-  input   [4  :0]  mmu_ifu_prot,
-  input            mmu_lsu_access_fault,
-  input            mmu_lsu_buf,
-  input            mmu_lsu_ca,
-  input            mmu_lsu_data_req,
-  input   [39 :0]  mmu_lsu_data_req_addr,
-  input            mmu_lsu_data_req_size,
-  input   [27 :0]  mmu_lsu_pa,
-  input            mmu_lsu_pa_vld,
-  input            mmu_lsu_page_fault,
-  input            mmu_lsu_sec,
-  input            mmu_lsu_sh,
-  input            mmu_lsu_so,
-  input            mmu_xx_mmu_en,
-  input            mmu_yy_xx_no_op,
-  input            pad_yy_icg_scan_en,
-  input            pad_yy_scan_mode,
-  input   [63 :0]  pmp_cp0_data,
-  input   [39 :0]  sysio_cp0_apb_base,
-  output           cp0_biu_icg_en,
-  output  [1  :0]  cp0_biu_lpmd_b,
-  output  [11 :0]  cp0_dtu_addr,
-  output  [5  :0]  cp0_dtu_debug_info,
-  output           cp0_dtu_icg_en,
-  output           cp0_dtu_mexpt_vld,
-  output           cp0_dtu_pcfifo_frz,
-  output           cp0_dtu_rreg,
-  output  [63 :0]  cp0_dtu_satp,
-  output  [63 :0]  cp0_dtu_wdata,
-  output           cp0_dtu_wreg,
-  output           cp0_hpcp_icg_en,
-  output  [11 :0]  cp0_hpcp_index,
-  output           cp0_hpcp_int_off_vld,
-  output  [31 :0]  cp0_hpcp_mcntwen,
-  output           cp0_hpcp_pmdm,
-  output           cp0_hpcp_pmds,
-  output           cp0_hpcp_pmdu,
-  output           cp0_hpcp_sync_stall_vld,
-  output  [63 :0]  cp0_hpcp_wdata,
-  output           cp0_hpcp_wreg,
-  output  [11 :0]  cp0_mmu_addr,
-  output           cp0_mmu_icg_en,
-  output           cp0_mmu_lpmd_req,
-  output           cp0_mmu_maee,
-  output           cp0_mmu_mxr,
-  output           cp0_mmu_ptw_en,
-  output  [63 :0]  cp0_mmu_satp_data,
-  output           cp0_mmu_satp_wen,
-  output           cp0_mmu_sum,
-  output           cp0_mmu_tlb_all_inv,
-  output  [15 :0]  cp0_mmu_tlb_asid,
-  output           cp0_mmu_tlb_asid_all_inv,
-  output  [26 :0]  cp0_mmu_tlb_va,
-  output           cp0_mmu_tlb_va_all_inv,
-  output           cp0_mmu_tlb_va_asid_inv,
-  output  [63 :0]  cp0_mmu_wdata,
-  output           cp0_mmu_wreg,
-  output  [11 :0]  cp0_pmp_addr,
-  output           cp0_pmp_icg_en,
-  output  [63 :0]  cp0_pmp_wdata,
-  output           cp0_pmp_wreg,
-  output           cp0_yy_clk_en,
-  output  [1  :0]  cp0_yy_priv_mode,
-  output  [14 :0]  idu_dtu_debug_info,
-  output           idu_hpcp_backend_stall,
-  output           idu_hpcp_frontend_stall,
-  output  [6  :0]  idu_hpcp_inst_type,
-  output  [39 :0]  ifu_biu_araddr,
-  output  [1  :0]  ifu_biu_arburst,
-  output  [3  :0]  ifu_biu_arcache,
-  output           ifu_biu_arid,
-  output  [1  :0]  ifu_biu_arlen,
-  output  [2  :0]  ifu_biu_arprot,
-  output  [2  :0]  ifu_biu_arsize,
-  output           ifu_biu_arvalid,
-  output           ifu_dtu_addr_vld0,
-  output           ifu_dtu_addr_vld1,
-  output           ifu_dtu_data_vld0,
-  output           ifu_dtu_data_vld1,
-  output  [20 :0]  ifu_dtu_debug_info,
-  output  [39 :0]  ifu_dtu_exe_addr0,
-  output  [39 :0]  ifu_dtu_exe_addr1,
-  output  [31 :0]  ifu_dtu_exe_data0,
-  output  [31 :0]  ifu_dtu_exe_data1,
-  output           ifu_hpcp_icache_access,
-  output           ifu_hpcp_icache_miss,
-  output           ifu_mmu_abort,
-  output  [51 :0]  ifu_mmu_va,
-  output           ifu_mmu_va_vld,
-  output  [8  :0]  iu_dtu_debug_info,
-  output           iu_hpcp_inst_bht_mispred,
-  output           iu_hpcp_inst_condbr,
-  output           iu_hpcp_jump_8m,
-  output  [39 :0]  lsu_biu_araddr,
-  output  [1  :0]  lsu_biu_arburst,
-  output  [3  :0]  lsu_biu_arcache,
-  output  [3  :0]  lsu_biu_arid,
-  output  [1  :0]  lsu_biu_arlen,
-  output  [2  :0]  lsu_biu_arprot,
-  output  [2  :0]  lsu_biu_arsize,
-  output           lsu_biu_aruser,
-  output           lsu_biu_arvalid,
-  output  [39 :0]  lsu_biu_stb_awaddr,
-  output  [1  :0]  lsu_biu_stb_awburst,
-  output  [3  :0]  lsu_biu_stb_awcache,
-  output  [1  :0]  lsu_biu_stb_awid,
-  output  [1  :0]  lsu_biu_stb_awlen,
-  output  [2  :0]  lsu_biu_stb_awprot,
-  output  [2  :0]  lsu_biu_stb_awsize,
-  output           lsu_biu_stb_awuser,
-  output           lsu_biu_stb_awvalid,
-  output  [127:0]  lsu_biu_stb_wdata,
-  output           lsu_biu_stb_wlast,
-  output  [15 :0]  lsu_biu_stb_wstrb,
-  output           lsu_biu_stb_wvalid,
-  output  [39 :0]  lsu_biu_vb_awaddr,
-  output  [1  :0]  lsu_biu_vb_awburst,
-  output  [3  :0]  lsu_biu_vb_awcache,
-  output  [3  :0]  lsu_biu_vb_awid,
-  output  [1  :0]  lsu_biu_vb_awlen,
-  output  [2  :0]  lsu_biu_vb_awprot,
-  output  [2  :0]  lsu_biu_vb_awsize,
-  output           lsu_biu_vb_awvalid,
-  output  [127:0]  lsu_biu_vb_wdata,
-  output           lsu_biu_vb_wlast,
-  output  [15 :0]  lsu_biu_vb_wstrb,
-  output           lsu_biu_vb_wvalid,
-  output  [93 :0]  lsu_dtu_debug_info,
-  output  [21 :0]  lsu_dtu_halt_info,
-  output           lsu_dtu_last_check,
-  output  [39 :0]  lsu_dtu_ldst_addr,
-  output           lsu_dtu_ldst_addr_vld,
-  output  [15 :0]  lsu_dtu_ldst_bytes_vld,
-  output  [63 :0]  lsu_dtu_ldst_data,
-  output           lsu_dtu_ldst_data_vld,
-  output  [1  :0]  lsu_dtu_ldst_type,
-  output  [2  :0]  lsu_dtu_mem_access_size,
-  output           lsu_hpcp_cache_read_access,
-  output           lsu_hpcp_cache_read_miss,
-  output           lsu_hpcp_cache_write_access,
-  output           lsu_hpcp_cache_write_miss,
-  output           lsu_hpcp_inst_store,
-  output           lsu_hpcp_unalign_inst,
-  output           lsu_mmu_abort,
-  output           lsu_mmu_bus_error,
-  output  [63 :0]  lsu_mmu_data,
-  output           lsu_mmu_data_vld,
-  output  [1  :0]  lsu_mmu_priv_mode,
-  output           lsu_mmu_st_inst,
-  output  [51 :0]  lsu_mmu_va,
-  output           lsu_mmu_va_vld,
-  output           rtu_cpu_no_retire,
-  output  [14 :0]  rtu_dtu_debug_info,
-  output  [63 :0]  rtu_dtu_dpc,
-  output           rtu_dtu_halt_ack,
-  output           rtu_dtu_pending_ack,
-  output           rtu_dtu_retire_chgflw,
-  output           rtu_dtu_retire_debug_expt_vld,
-  output  [21 :0]  rtu_dtu_retire_halt_info,
-  output           rtu_dtu_retire_mret,
-  output  [39 :0]  rtu_dtu_retire_next_pc,
-  output           rtu_dtu_retire_sret,
-  output           rtu_dtu_retire_vld,
-  output  [63 :0]  rtu_dtu_tval,
-  output           rtu_hpcp_int_vld,
-  output           rtu_hpcp_retire_inst_vld,
-  output  [39 :0]  rtu_hpcp_retire_pc,
-  output  [26 :0]  rtu_mmu_bad_vpn,
-  output           rtu_mmu_expt_vld,
-  output           rtu_pad_halted,
-  output           rtu_pad_retire,
-  output  [39 :0]  rtu_pad_retire_pc,
-  output           rtu_yy_xx_dbgon,
-  output           rtu_yy_xx_expt_int,
-  output  [4  :0]  rtu_yy_xx_expt_vec,
-  output           rtu_yy_xx_expt_vld,
-  output  [7  :0]  vidu_dtu_debug_info,
-  output  [28 :0]  vpu_dtu_dbg_info
+  // BIU (Bus Interface Unit) to CP0 (Control Processor 0) Interface
+  input   [2  :0]  biu_cp0_coreid,          // Core ID from bus interface unit
+  input            biu_cp0_me_int,          // Machine mode external interrupt from BIU
+  input            biu_cp0_ms_int,          // Machine mode software interrupt from BIU
+  input            biu_cp0_mt_int,          // Machine mode timer interrupt from BIU
+  input   [39 :0]  biu_cp0_rvba,            // Reset vector base address from BIU
+  input            biu_cp0_se_int,          // Supervisor mode external interrupt from BIU
+  input            biu_cp0_ss_int,          // Supervisor mode software interrupt from BIU
+  input            biu_cp0_st_int,          // Supervisor mode timer interrupt from BIU
+  
+  // BIU to IFU (Instruction Fetch Unit) AXI Read Interface
+  input            biu_ifu_arready,         // AXI address read ready from BIU to IFU
+  input   [127:0]  biu_ifu_rdata,           // AXI read data from BIU to IFU (128-bit instruction data)
+  input            biu_ifu_rid,             // AXI read transaction ID from BIU to IFU
+  input            biu_ifu_rlast,           // AXI read last transfer from BIU to IFU
+  input   [1  :0]  biu_ifu_rresp,           // AXI read response from BIU to IFU (00=OKAY, 01=EXOKAY, 10=SLVERR, 11=DECERR)
+  input            biu_ifu_rvalid,          // AXI read data valid from BIU to IFU
+  
+  // BIU to LSU (Load/Store Unit) AXI Interface
+  input            biu_lsu_arready,         // AXI address read ready from BIU to LSU
+  input            biu_lsu_no_op,           // BIU has no pending operations for LSU
+  input   [127:0]  biu_lsu_rdata,           // AXI read data from BIU to LSU (128-bit data)
+  input   [3  :0]  biu_lsu_rid,             // AXI read transaction ID from BIU to LSU
+  input            biu_lsu_rlast,           // AXI read last transfer from BIU to LSU
+  input   [1  :0]  biu_lsu_rresp,           // AXI read response from BIU to LSU
+  input            biu_lsu_rvalid,          // AXI read data valid from BIU to LSU
+  input            biu_lsu_stb_awready,     // AXI address write ready for store buffer from BIU
+  input            biu_lsu_stb_wready,      // AXI write data ready for store buffer from BIU
+  input            biu_lsu_vb_awready,      // AXI address write ready for victim buffer from BIU
+  input            biu_lsu_vb_wready,       // AXI write data ready for victim buffer from BIU
+  
+  // System Control and Reset
+  input            cpurst_b,                // CPU reset (active low)
+  
+  // DTU (Debug Trace Unit) to CP0 Interface
+  input            dtu_cp0_dcsr_mprven,     // Debug Control and Status Register machine privilege enable
+  input   [1  :0]  dtu_cp0_dcsr_prv,       // Debug Control and Status Register privilege mode
+  input   [63 :0]  dtu_cp0_rdata,          // Debug data from DTU to CP0
+  input            dtu_cp0_wake_up,         // Debug wake up signal from DTU
+  
+  // DTU to IFU Interface
+  input   [31 :0]  dtu_ifu_debug_inst,     // Debug instruction from DTU to IFU
+  input            dtu_ifu_debug_inst_vld, // Debug instruction valid from DTU to IFU
+  input   [21 :0]  dtu_ifu_halt_info0,     // Halt information 0 from DTU to IFU
+  input   [21 :0]  dtu_ifu_halt_info1,     // Halt information 1 from DTU to IFU
+  input            dtu_ifu_halt_info_vld,  // Halt information valid from DTU to IFU
+  input            dtu_ifu_halt_on_reset,  // Halt on reset signal from DTU to IFU
+  
+  // DTU to LSU Interface
+  input            dtu_lsu_addr_trig_en,   // Address trigger enable from DTU to LSU
+  input            dtu_lsu_data_trig_en,   // Data trigger enable from DTU to LSU
+  input   [21 :0]  dtu_lsu_halt_info,      // Halt information from DTU to LSU
+  input            dtu_lsu_halt_info_vld,  // Halt information valid from DTU to LSU
+  
+  // DTU to RTU Interface
+  input            dtu_rtu_async_halt_req, // Asynchronous halt request from DTU to RTU
+  input   [63 :0]  dtu_rtu_dpc,            // Debug PC from DTU to RTU
+  input            dtu_rtu_ebreak_action,  // Ebreak action from DTU to RTU
+  input            dtu_rtu_int_mask,       // Interrupt mask from DTU to RTU
+  input   [63 :0]  dtu_rtu_pending_tval,   // Pending trap value from DTU to RTU
+  input            dtu_rtu_resume_req,     // Resume request from DTU to RTU
+  input            dtu_rtu_step_en,        // Single step enable from DTU to RTU
+  input            dtu_rtu_sync_flush,     // Synchronous flush from DTU to RTU
+  input            dtu_rtu_sync_halt_req,  // Synchronous halt request from DTU to RTU
+  
+  // Global Clock
+  input            forever_cpuclk,         // Global CPU clock (always running)
+  
+  // HPCP (Hardware Performance Counter) Interface
+  input   [63 :0]  hpcp_cp0_data,          // Performance counter data from HPCP to CP0
+  input            hpcp_cp0_int_vld,       // Performance counter interrupt valid from HPCP
+  input            hpcp_cp0_sce,           // Performance counter special condition event from HPCP
+  input            hpcp_idu_cnt_en,        // Performance counter enable for IDU from HPCP
+  input            hpcp_ifu_cnt_en,        // Performance counter enable for IFU from HPCP
+  input            hpcp_iu_cnt_en,         // Performance counter enable for IU from HPCP
+  input            hpcp_lsu_cnt_en,        // Performance counter enable for LSU from HPCP
+  input            hpcp_rtu_cnt_en,        // Performance counter enable for RTU from HPCP
+  
+  // MMU (Memory Management Unit) to Core Interface
+  input            mmu_cp0_cmplt,          // MMU operation complete to CP0
+  input   [63 :0]  mmu_cp0_data,           // MMU data to CP0
+  input            mmu_cp0_tlb_inv_done,   // TLB invalidation done signal from MMU to CP0
+  input            mmu_ifu_access_fault,   // Access fault signal from MMU to IFU
+  input   [27 :0]  mmu_ifu_pa,             // Physical address from MMU to IFU
+  input            mmu_ifu_pa_vld,         // Physical address valid from MMU to IFU
+  input   [4  :0]  mmu_ifu_prot,           // Protection attributes from MMU to IFU
+  input            mmu_lsu_access_fault,   // Access fault signal from MMU to LSU
+  input            mmu_lsu_buf,            // Buffer attribute from MMU to LSU
+  input            mmu_lsu_ca,             // Cacheable attribute from MMU to LSU
+  input            mmu_lsu_data_req,       // Data request from MMU to LSU
+  input   [39 :0]  mmu_lsu_data_req_addr,  // Data request address from MMU to LSU
+  input            mmu_lsu_data_req_size,  // Data request size from MMU to LSU
+  input   [27 :0]  mmu_lsu_pa,             // Physical address from MMU to LSU
+  input            mmu_lsu_pa_vld,         // Physical address valid from MMU to LSU
+  input            mmu_lsu_page_fault,     // Page fault signal from MMU to LSU
+  input            mmu_lsu_sec,            // Security attribute from MMU to LSU
+  input            mmu_lsu_sh,             // Shareable attribute from MMU to LSU
+  input            mmu_lsu_so,             // Strongly ordered attribute from MMU to LSU
+  input            mmu_xx_mmu_en,          // MMU enable signal
+  input            mmu_yy_xx_no_op,        // MMU no operation signal
+  
+  // System Interface
+  input            pad_yy_icg_scan_en,     // Integrated clock gating scan enable
+  input            pad_yy_scan_mode,       // Scan mode enable
+  input   [63 :0]  pmp_cp0_data,           // Physical Memory Protection data to CP0
+  input   [39 :0]  sysio_cp0_apb_base,     // System I/O APB base address
+  
+  // ================================================================
+  // OUTPUT PORTS
+  // ================================================================
+  
+  // CP0 to BIU Interface
+  output           cp0_biu_icg_en,         // Integrated clock gating enable from CP0 to BIU
+  output  [1  :0]  cp0_biu_lpmd_b,         // Low power mode disable from CP0 to BIU
+  
+  // CP0 to DTU Interface
+  output  [11 :0]  cp0_dtu_addr,           // Address from CP0 to DTU for register access
+  output  [5  :0]  cp0_dtu_debug_info,     // Debug information from CP0 to DTU
+  output           cp0_dtu_icg_en,         // Integrated clock gating enable from CP0 to DTU
+  output           cp0_dtu_mexpt_vld,      // Machine exception valid from CP0 to DTU
+  output           cp0_dtu_pcfifo_frz,     // PC FIFO freeze signal from CP0 to DTU
+  output           cp0_dtu_rreg,           // Register read enable from CP0 to DTU
+  output  [63 :0]  cp0_dtu_satp,           // Supervisor Address Translation and Protection register
+  output  [63 :0]  cp0_dtu_wdata,          // Write data from CP0 to DTU
+  output           cp0_dtu_wreg,           // Register write enable from CP0 to DTU
+  
+  // CP0 to HPCP Interface
+  output           cp0_hpcp_icg_en,        // Integrated clock gating enable from CP0 to HPCP
+  output  [11 :0]  cp0_hpcp_index,         // Index for performance counter access
+  output           cp0_hpcp_int_off_vld,   // Interrupt off valid signal from CP0 to HPCP
+  output  [31 :0]  cp0_hpcp_mcntwen,       // Machine counter write enable from CP0 to HPCP
+  output           cp0_hpcp_pmdm,          // Performance monitor debug mode from CP0 to HPCP
+  output           cp0_hpcp_pmds,          // Performance monitor debug supervisor from CP0 to HPCP
+  output           cp0_hpcp_pmdu,          // Performance monitor debug user from CP0 to HPCP
+  output           cp0_hpcp_sync_stall_vld, // Synchronous stall valid from CP0 to HPCP
+  output  [63 :0]  cp0_hpcp_wdata,         // Write data from CP0 to HPCP
+  output           cp0_hpcp_wreg,          // Register write enable from CP0 to HPCP
+  
+  // CP0 to MMU Interface
+  output  [11 :0]  cp0_mmu_addr,           // Address from CP0 to MMU for register access
+  output           cp0_mmu_icg_en,         // Integrated clock gating enable from CP0 to MMU
+  output           cp0_mmu_lpmd_req,       // Low power mode request from CP0 to MMU
+  output           cp0_mmu_maee,           // Memory attribute extension enable from CP0 to MMU
+  output           cp0_mmu_mxr,            // Make executable readable from CP0 to MMU
+  output           cp0_mmu_ptw_en,         // Page table walker enable from CP0 to MMU
+  output  [63 :0]  cp0_mmu_satp_data,      // SATP (Supervisor Address Translation and Protection) data
+  output           cp0_mmu_satp_wen,       // SATP write enable from CP0 to MMU
+  output           cp0_mmu_sum,            // Supervisor user memory access from CP0 to MMU
+  output           cp0_mmu_tlb_all_inv,    // TLB invalidate all from CP0 to MMU
+  output  [15 :0]  cp0_mmu_tlb_asid,       // TLB Address Space ID from CP0 to MMU
+  output           cp0_mmu_tlb_asid_all_inv, // TLB invalidate all ASIDs from CP0 to MMU
+  output  [26 :0]  cp0_mmu_tlb_va,         // TLB virtual address from CP0 to MMU
+  output           cp0_mmu_tlb_va_all_inv, // TLB invalidate all virtual addresses from CP0 to MMU
+  output           cp0_mmu_tlb_va_asid_inv, // TLB invalidate specific VA and ASID from CP0 to MMU
+  output  [63 :0]  cp0_mmu_wdata,          // Write data from CP0 to MMU
+  output           cp0_mmu_wreg,           // Register write enable from CP0 to MMU
+  
+  // CP0 to PMP Interface
+  output  [11 :0]  cp0_pmp_addr,           // Address from CP0 to PMP for register access
+  output           cp0_pmp_icg_en,         // Integrated clock gating enable from CP0 to PMP
+  output  [63 :0]  cp0_pmp_wdata,          // Write data from CP0 to PMP
+  output           cp0_pmp_wreg,           // Register write enable from CP0 to PMP
+  
+  // CP0 Global Outputs
+  output           cp0_yy_clk_en,          // Global clock enable from CP0
+  output  [1  :0]  cp0_yy_priv_mode,       // Current privilege mode from CP0
+  
+  // IDU (Instruction Decode Unit) Outputs
+  output  [14 :0]  idu_dtu_debug_info,     // Debug information from IDU to DTU
+  output           idu_hpcp_backend_stall, // Backend stall signal from IDU to HPCP
+  output           idu_hpcp_frontend_stall, // Frontend stall signal from IDU to HPCP
+  output  [6  :0]  idu_hpcp_inst_type,     // Instruction type from IDU to HPCP
+  
+  // IFU (Instruction Fetch Unit) to BIU AXI Interface
+  output  [39 :0]  ifu_biu_araddr,         // AXI address read address from IFU to BIU
+  output  [1  :0]  ifu_biu_arburst,        // AXI address read burst type from IFU to BIU
+  output  [3  :0]  ifu_biu_arcache,        // AXI address read cache attributes from IFU to BIU
+  output           ifu_biu_arid,           // AXI address read transaction ID from IFU to BIU
+  output  [1  :0]  ifu_biu_arlen,          // AXI address read burst length from IFU to BIU
+  output  [2  :0]  ifu_biu_arprot,         // AXI address read protection attributes from IFU to BIU
+  output  [2  :0]  ifu_biu_arsize,         // AXI address read transfer size from IFU to BIU
+  output           ifu_biu_arvalid,        // AXI address read valid from IFU to BIU
+  
+  // IFU to DTU Interface
+  output           ifu_dtu_addr_vld0,      // Address valid 0 from IFU to DTU
+  output           ifu_dtu_addr_vld1,      // Address valid 1 from IFU to DTU
+  output           ifu_dtu_data_vld0,      // Data valid 0 from IFU to DTU
+  output           ifu_dtu_data_vld1,      // Data valid 1 from IFU to DTU
+  output  [20 :0]  ifu_dtu_debug_info,     // Debug information from IFU to DTU
+  output  [39 :0]  ifu_dtu_exe_addr0,      // Execution address 0 from IFU to DTU
+  output  [39 :0]  ifu_dtu_exe_addr1,      // Execution address 1 from IFU to DTU
+  output  [31 :0]  ifu_dtu_exe_data0,      // Execution data 0 from IFU to DTU
+  output  [31 :0]  ifu_dtu_exe_data1,      // Execution data 1 from IFU to DTU
+  
+  // IFU to HPCP Interface
+  output           ifu_hpcp_icache_access, // Instruction cache access from IFU to HPCP
+  output           ifu_hpcp_icache_miss,   // Instruction cache miss from IFU to HPCP
+  
+  // IFU to MMU Interface
+  output           ifu_mmu_abort,          // Abort signal from IFU to MMU
+  output  [51 :0]  ifu_mmu_va,             // Virtual address from IFU to MMU
+  output           ifu_mmu_va_vld,         // Virtual address valid from IFU to MMU
+  
+  // IU (Integer Unit) Outputs
+  output  [8  :0]  iu_dtu_debug_info,      // Debug information from IU to DTU
+  output           iu_hpcp_inst_bht_mispred, // BHT misprediction from IU to HPCP
+  output           iu_hpcp_inst_condbr,    // Conditional branch instruction from IU to HPCP
+  output           iu_hpcp_jump_8m,        // 8MB jump from IU to HPCP
+  
+  // LSU (Load/Store Unit) to BIU AXI Interface
+  output  [39 :0]  lsu_biu_araddr,         // AXI read address from LSU to BIU
+  output  [1  :0]  lsu_biu_arburst,        // AXI read burst type from LSU to BIU
+  output  [3  :0]  lsu_biu_arcache,        // AXI read cache attributes from LSU to BIU
+  output  [3  :0]  lsu_biu_arid,           // AXI read transaction ID from LSU to BIU
+  output  [1  :0]  lsu_biu_arlen,          // AXI read burst length from LSU to BIU
+  output  [2  :0]  lsu_biu_arprot,         // AXI read protection attributes from LSU to BIU
+  output  [2  :0]  lsu_biu_arsize,         // AXI read transfer size from LSU to BIU
+  output           lsu_biu_aruser,         // AXI read user signals from LSU to BIU
+  output           lsu_biu_arvalid,        // AXI read address valid from LSU to BIU
+  
+  // LSU Store Buffer to BIU AXI Interface
+  output  [39 :0]  lsu_biu_stb_awaddr,     // AXI write address from store buffer to BIU
+  output  [1  :0]  lsu_biu_stb_awburst,    // AXI write burst type from store buffer to BIU
+  output  [3  :0]  lsu_biu_stb_awcache,    // AXI write cache attributes from store buffer to BIU
+  output  [1  :0]  lsu_biu_stb_awid,       // AXI write transaction ID from store buffer to BIU
+  output  [1  :0]  lsu_biu_stb_awlen,      // AXI write burst length from store buffer to BIU
+  output  [2  :0]  lsu_biu_stb_awprot,     // AXI write protection from store buffer to BIU
+  output  [2  :0]  lsu_biu_stb_awsize,     // AXI write transfer size from store buffer to BIU
+  output           lsu_biu_stb_awuser,     // AXI write user signals from store buffer to BIU
+  output           lsu_biu_stb_awvalid,    // AXI write address valid from store buffer to BIU
+  output  [127:0]  lsu_biu_stb_wdata,      // AXI write data from store buffer to BIU
+  output           lsu_biu_stb_wlast,      // AXI write last from store buffer to BIU
+  output  [15 :0]  lsu_biu_stb_wstrb,      // AXI write strobe from store buffer to BIU
+  output           lsu_biu_stb_wvalid,     // AXI write data valid from store buffer to BIU
+  
+  // LSU Victim Buffer to BIU AXI Interface
+  output  [39 :0]  lsu_biu_vb_awaddr,      // AXI write address from victim buffer to BIU
+  output  [1  :0]  lsu_biu_vb_awburst,     // AXI write burst type from victim buffer to BIU
+  output  [3  :0]  lsu_biu_vb_awcache,     // AXI write cache attributes from victim buffer to BIU
+  output  [3  :0]  lsu_biu_vb_awid,        // AXI write transaction ID from victim buffer to BIU
+  output  [1  :0]  lsu_biu_vb_awlen,       // AXI write burst length from victim buffer to BIU
+  output  [2  :0]  lsu_biu_vb_awprot,      // AXI write protection from victim buffer to BIU
+  output  [2  :0]  lsu_biu_vb_awsize,      // AXI write transfer size from victim buffer to BIU
+  output           lsu_biu_vb_awvalid,     // AXI write address valid from victim buffer to BIU
+  output  [127:0]  lsu_biu_vb_wdata,       // AXI write data from victim buffer to BIU
+  output           lsu_biu_vb_wlast,       // AXI write last from victim buffer to BIU
+  output  [15 :0]  lsu_biu_vb_wstrb,       // AXI write strobe from victim buffer to BIU
+  output           lsu_biu_vb_wvalid,      // AXI write data valid from victim buffer to BIU
+  
+  // LSU Debug and Performance Monitoring Outputs
+  output  [93 :0]  lsu_dtu_debug_info,     // Debug information from LSU to DTU
+  output  [21 :0]  lsu_dtu_halt_info,      // Halt information from LSU to DTU
+  output           lsu_dtu_last_check,     // Last check signal from LSU to DTU
+  output  [39 :0]  lsu_dtu_ldst_addr,      // Load/store address from LSU to DTU
+  output           lsu_dtu_ldst_addr_vld,  // Load/store address valid from LSU to DTU
+  output  [15 :0]  lsu_dtu_ldst_bytes_vld, // Load/store bytes valid from LSU to DTU
+  output  [63 :0]  lsu_dtu_ldst_data,      // Load/store data from LSU to DTU
+  output           lsu_dtu_ldst_data_vld,  // Load/store data valid from LSU to DTU
+  output  [1  :0]  lsu_dtu_ldst_type,      // Load/store type from LSU to DTU
+  output  [2  :0]  lsu_dtu_mem_access_size, // Memory access size from LSU to DTU
+  output           lsu_hpcp_cache_read_access, // Cache read access from LSU to HPCP
+  output           lsu_hpcp_cache_read_miss,   // Cache read miss from LSU to HPCP
+  output           lsu_hpcp_cache_write_access, // Cache write access from LSU to HPCP
+  output           lsu_hpcp_cache_write_miss,  // Cache write miss from LSU to HPCP
+  output           lsu_hpcp_inst_store,     // Store instruction from LSU to HPCP
+  output           lsu_hpcp_unalign_inst,   // Unaligned instruction from LSU to HPCP
+  
+  // LSU to MMU Interface
+  output           lsu_mmu_abort,          // Abort signal from LSU to MMU
+  output           lsu_mmu_bus_error,      // Bus error from LSU to MMU
+  output  [63 :0]  lsu_mmu_data,           // Data from LSU to MMU
+  output           lsu_mmu_data_vld,       // Data valid from LSU to MMU
+  output  [1  :0]  lsu_mmu_priv_mode,      // Privilege mode from LSU to MMU
+  output           lsu_mmu_st_inst,        // Store instruction from LSU to MMU
+  output  [51 :0]  lsu_mmu_va,             // Virtual address from LSU to MMU
+  output           lsu_mmu_va_vld,         // Virtual address valid from LSU to MMU
+  
+  // RTU (Retire Unit) Outputs
+  output           rtu_cpu_no_retire,      // No retire signal from RTU to CPU
+  output  [14 :0]  rtu_dtu_debug_info,     // Debug information from RTU to DTU
+  output  [63 :0]  rtu_dtu_dpc,            // Debug PC from RTU to DTU
+  output           rtu_dtu_halt_ack,       // Halt acknowledge from RTU to DTU
+  output           rtu_dtu_pending_ack,    // Pending acknowledge from RTU to DTU
+  output           rtu_dtu_retire_chgflw,  // Retire change flow from RTU to DTU
+  output           rtu_dtu_retire_debug_expt_vld, // Retire debug exception valid from RTU
+  output  [21 :0]  rtu_dtu_retire_halt_info, // Retire halt information from RTU to DTU
+  output           rtu_dtu_retire_mret,    // Retire machine return from RTU to DTU
+  output  [39 :0]  rtu_dtu_retire_next_pc, // Retire next PC from RTU to DTU
+  output           rtu_dtu_retire_sret,    // Retire supervisor return from RTU to DTU
+  output           rtu_dtu_retire_vld,     // Retire valid from RTU to DTU
+  output  [63 :0]  rtu_dtu_tval,           // Trap value from RTU to DTU
+  output           rtu_hpcp_int_vld,       // Interrupt valid from RTU to HPCP
+  output           rtu_hpcp_retire_inst_vld, // Retire instruction valid from RTU to HPCP
+  output  [39 :0]  rtu_hpcp_retire_pc,     // Retire PC from RTU to HPCP
+  output  [26 :0]  rtu_mmu_bad_vpn,        // Bad virtual page number from RTU to MMU
+  output           rtu_mmu_expt_vld,       // Exception valid from RTU to MMU
+  output           rtu_pad_halted,         // Halted signal from RTU to pad
+  output           rtu_pad_retire,         // Retire signal from RTU to pad
+  output  [39 :0]  rtu_pad_retire_pc,      // Retire PC from RTU to pad
+  output           rtu_yy_xx_dbgon,        // Debug on signal from RTU
+  output           rtu_yy_xx_expt_int,     // Exception interrupt from RTU
+  output  [4  :0]  rtu_yy_xx_expt_vec,     // Exception vector from RTU
+  output           rtu_yy_xx_expt_vld,     // Exception valid from RTU
+  
+  // VPU (Vector Processing Unit) Debug Outputs
+  output  [7  :0]  vidu_dtu_debug_info,    // Debug information from VIDU to DTU
+  output  [28 :0]  vpu_dtu_dbg_info        // Debug information from VPU to DTU
 );
 
 aq_ifu_top  x_aq_ifu_top (
